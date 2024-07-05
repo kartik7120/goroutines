@@ -2,21 +2,26 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
-func someFunc() {
-	fmt.Println("This is someFunc")
-}
-
 func main() {
-	go someFunc()
-	go someFunc()
-	go someFunc()
+	ch := make(chan string)
+	ch2 := make(chan string)
 
-	time.Sleep(time.Second * 2)
+	go func() {
+		ch <- "Hello, World!"
+	}()
 
-	fmt.Println("Hello, World!")
+	go func() {
+		ch2 <- "Hello, World! 2"
+	}()
+
+	select {
+	case msg1 := <-ch:
+		fmt.Println(msg1)
+	case msg2 := <-ch2:
+		fmt.Println(msg2)
+	}
 }
 
 /*
